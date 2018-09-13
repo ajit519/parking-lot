@@ -27,10 +27,10 @@ public class CreateParkingSlotImpl  implements CreateParkingSlot {
     }
 
     private void addSlots(Set<Slot> slots , int capacity){
-        IntStream.rangeClosed(1, capacity).forEach(id -> createSlot(id, 1, slots));
+        IntStream.rangeClosed(1, capacity).forEach(id -> createSlot(id, slots));
     }
 
-    private void createSlot(int id, int floorId, Set<Slot> slots){
-        slots.add(new Slot(id, floorId));
+    private void createSlot(int id, Set<Slot> slots){
+        slots.add(new Slot(id));
     }
 }
