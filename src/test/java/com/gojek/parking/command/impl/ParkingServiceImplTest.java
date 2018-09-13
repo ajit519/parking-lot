@@ -89,6 +89,24 @@ public class ParkingServiceImplTest extends BaseServiceTest {
 
     }
 
+    @Test
+    public void givenSlotNumber_whenUnParkVehicle_thenReturnSuccess(){
+        parkService.park(REG_1, WHITE);
+        parkService.unpark(SLOT_1);
+    }
+
+    @Test
+    public void givenSlotNumberNotBeenAllocated_whenUnParkVehicle_thenReturnError(){
+        parkService.park(REG_1, WHITE);
+        try {
+            parkService.unpark(SLOT_2);
+            fail("Un parking failed Due to invalid Slot id");
+        }catch (IllegalArgumentException ex){
+            assertThat(ex.getMessage(), is("Invalid slotId"));
+        }
+
+    }
+
     private Set<Slot> expectSlot(){
         this.slots = new HashSet<>();
         IntStream.rangeClosed(1, CAPACITY).forEach(id -> slots.add(new Slot(id)));

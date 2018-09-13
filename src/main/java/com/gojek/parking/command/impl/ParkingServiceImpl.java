@@ -30,17 +30,17 @@ public class ParkingServiceImpl implements ParkService {
             throw new IllegalArgumentException("Please provide car details");
         }
 
-        if (freeSlots.size() == 0){
+        if (freeSlots.size() == 0) {
             System.out.println("Sorry, parking lot is full");
             throw new RuntimeException("Sorry, parking lot is full");
         }
 
-        for (Slot slot: usedSlot){
+        for (Slot slot : usedSlot) {
             Optional<Vehicle> alreadyParked = slot.getVehicles().stream()
-                              .filter(vehicle -> vehicle.getRegistrationNumber().equals(registrationNumber))
-                              .findFirst();
+                    .filter(vehicle -> vehicle.getRegistrationNumber().equals(registrationNumber))
+                    .findFirst();
 
-            if (alreadyParked.isPresent()){
+            if (alreadyParked.isPresent()) {
                 throw new RuntimeException(String.format("Vehicle with registration number %s already been parked", registrationNumber));
             }
         }
@@ -68,6 +68,16 @@ public class ParkingServiceImpl implements ParkService {
 
     @Override
     public void unpark(int slotId) {
+        Slot allocatedSlot = usedSlot.stream()
+                .filter(slot -> slot.getId() == slotId)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid slotId"));
+        synchronized (allocatedSlot){
+            allocatedSlot.freeSlot(true);
+            usedSlot.remove(allocatedSlot);
+            freeSlots.add(allocatedSlot);
+        }
+        System.out.println(String.format("Slot number %d is free", allocatedSlot.getId()));
 
     }
 

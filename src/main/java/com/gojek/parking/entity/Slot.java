@@ -25,6 +25,13 @@ public class Slot {
         return isFree;
     }
 
+    public void freeSlot(boolean free){
+        if(free == false){
+            throw new IllegalArgumentException("Invalid value");
+        }
+        this.isFree = free;
+    }
+
     public int getId(){
         return this.id;
     }

@@ -21,4 +21,11 @@ public abstract class BaseServiceTest {
 
     protected static final int CAPACITY = 6;
 
+    protected static final int SLOT_1 = 1;
+    protected static final int SLOT_2 = 2;
+    protected static final int SLOT_3 = 3;
+    protected static final int SLOT_4 = 4;
+    protected static final int SLOT_5 = 5;
+    protected static final int SLOT_6 = 6;
+
 }
