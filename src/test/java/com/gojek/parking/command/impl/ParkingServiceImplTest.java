@@ -8,8 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -83,6 +87,24 @@ public class ParkingServiceImplTest extends BaseServiceTest {
         try {
             parkService.park(REG_7, BLACK);
             fail("Parking is full, throw RuntimeException");
+        }catch (RuntimeException ex){
+            assertThat(ex.getMessage(), is("Sorry, parking lot is full"));
+        }
+
+    }
+
+    @Test
+    public void givenMultipleUser_whenParkingVehicle_thenThrowError(){
+        List<String> registrationNumbers = Arrays.asList(REG_1, REG_2, REG_3, REG_4, REG_5, REG_6, REG_7);
+        ExecutorService executorService = Executors.newFixedThreadPool(CAPACITY+1);
+        try {
+            registrationNumbers
+                    .forEach(reg -> executorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            parkService.park(reg, WHITE);
+                        }
+                    }));
         }catch (RuntimeException ex){
             assertThat(ex.getMessage(), is("Sorry, parking lot is full"));
         }
