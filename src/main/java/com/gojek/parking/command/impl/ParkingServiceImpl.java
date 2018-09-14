@@ -5,10 +5,8 @@ import com.gojek.parking.entity.Slot;
 import com.gojek.parking.entity.Ticket;
 import com.gojek.parking.entity.Vehicle;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ParkingServiceImpl implements ParkService {
 
@@ -79,6 +77,58 @@ public class ParkingServiceImpl implements ParkService {
         }
         System.out.println(String.format("Slot number %d is free", allocatedSlot.getId()));
 
+    }
+
+    @Override
+    public List<String> getRegistrationNumber(String color) {
+
+        List<String> output= new ArrayList<>();
+
+        for (Slot slot: usedSlot){
+            List<String> vehicles = slot.getVehicles().stream()
+                    .filter(vehicle -> vehicle.getColor().toLowerCase().equals(color))
+                    .map(Vehicle::getRegistrationNumber)
+                    .collect(Collectors.toList());
+            output.addAll(vehicles);
+        }
+
+        return output;
+    }
+
+    @Override
+    public Slot getSlot(String registration) {
+        for (Slot slot: usedSlot){
+            Optional<Vehicle> vehicle1 = slot.getVehicles().stream()
+                    .filter(vehicle -> vehicle.getRegistrationNumber().equals(registration))
+                    .findFirst();
+            if (vehicle1.isPresent()){
+                return slot;
+            }
+        }
+        throw new RuntimeException("Not Found");
+    }
+
+    @Override
+    public List<Integer> getSlots(String color) {
+        List<Integer> slotNumber = new ArrayList<>();
+        for (Slot slot: usedSlot){
+            Optional<Vehicle> vehicle1 = slot.getVehicles().stream()
+                    .filter(vehicle -> vehicle.getColor().toLowerCase().equals(color.toLowerCase()))
+                    .findFirst();
+            if (vehicle1.isPresent()){
+                 slotNumber.add(slot.getId());
+            }
+        }
+        return slotNumber;
+    }
+
+    @Override
+    public  void status(){
+        System.out.println("Slot No.  " + "Registration No  " + "Colour");
+        for (Slot slot: usedSlot){
+            System.out.println(String.format("%d %22s %8s", slot.getId(), slot.getVehicles().get(0).getRegistrationNumber()
+                    , slot.getVehicles().get(0).getColor()));
+        }
     }
 
     private Ticket issueTicket(Vehicle vehicle, Slot slot) {

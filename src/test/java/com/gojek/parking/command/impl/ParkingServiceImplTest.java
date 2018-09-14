@@ -18,6 +18,7 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
@@ -99,11 +100,8 @@ public class ParkingServiceImplTest extends BaseServiceTest {
         ExecutorService executorService = Executors.newFixedThreadPool(CAPACITY+1);
         try {
             registrationNumbers
-                    .forEach(reg -> executorService.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            parkService.park(reg, WHITE);
-                        }
+                    .forEach(reg -> executorService.submit(() -> {
+                        parkService.park(reg, WHITE);
                     }));
         }catch (RuntimeException ex){
             assertThat(ex.getMessage(), is("Sorry, parking lot is full"));
@@ -125,6 +123,57 @@ public class ParkingServiceImplTest extends BaseServiceTest {
             fail("Un parking failed Due to invalid Slot id");
         }catch (IllegalArgumentException ex){
             assertThat(ex.getMessage(), is("Invalid slotId"));
+        }
+    }
+
+    @Test
+    public void givenParking_fetchCurrentStatus_thenSuccess(){
+        parkService.park(REG_1, WHITE);
+        parkService.park(REG_2, WHITE);
+        parkService.park(REG_3, BLACK);
+        parkService.park(REG_4, BLUE);
+        parkService.status();
+    }
+
+    @Test
+    public void givenColour_whenFetchSlot_thenReturnSlotNumber(){
+        parkService.park(REG_1, WHITE);
+        parkService.park(REG_2, WHITE);
+        parkService.park(REG_3, BLACK);
+        parkService.park(REG_4, BLUE);
+
+        List<Integer> slots = parkService.getSlots(WHITE);
+
+        assertTrue(slots.contains(SLOT_1));
+        assertTrue(slots.contains(SLOT_2));
+
+    }
+
+    @Test
+    public void givenColour_whenNoVehiclePark__thenReturnNoSlot(){
+        List<Integer> slots = parkService.getSlots(WHITE);
+
+        assertTrue(slots.isEmpty());
+    }
+
+    @Test
+    public void givenRegistrationNumber_whenFetchSlot_thenReturnSlotNumber(){
+        parkService.park(REG_4, BLUE);
+
+        Slot slot = parkService.getSlot(REG_4);
+
+        assertThat(slot.getId(), is(1));
+    }
+
+    @Test
+    public void givenRegistrationNumberNotParked_whenFetchSlot_thenReturnNotFound(){
+        parkService.park(REG_4, BLUE);
+
+        try {
+            parkService.getSlot(REG_6);
+            fail("Given registration number not found");
+        }catch (RuntimeException ex){
+            assertThat(ex.getMessage(), is("Not Found"));
         }
 
     }

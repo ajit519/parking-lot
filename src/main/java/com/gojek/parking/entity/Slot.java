@@ -26,7 +26,7 @@ public class Slot {
     }
 
     public void freeSlot(boolean free){
-        if(free == false){
+        if(!free){
             throw new IllegalArgumentException("Invalid value");
         }
         this.isFree = free;
