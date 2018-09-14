@@ -92,6 +92,7 @@ public class ParkingServiceImpl implements ParkService {
             output.addAll(vehicles);
         }
 
+        System.out.println(output);
         return output;
     }
 
@@ -102,14 +103,16 @@ public class ParkingServiceImpl implements ParkService {
                     .filter(vehicle -> vehicle.getRegistrationNumber().equals(registration))
                     .findFirst();
             if (vehicle1.isPresent()){
+                System.out.println(slot.getId());
                 return slot;
             }
         }
+
         throw new RuntimeException("Not Found");
     }
 
     @Override
-    public List<Integer> getSlots(String color) {
+    public List<Integer> getSlotsForColour(String color) {
         List<Integer> slotNumber = new ArrayList<>();
         for (Slot slot: usedSlot){
             Optional<Vehicle> vehicle1 = slot.getVehicles().stream()
@@ -119,6 +122,7 @@ public class ParkingServiceImpl implements ParkService {
                  slotNumber.add(slot.getId());
             }
         }
+        System.out.println(slotNumber);
         return slotNumber;
     }
 
@@ -130,6 +134,8 @@ public class ParkingServiceImpl implements ParkService {
                     , slot.getVehicles().get(0).getColor()));
         }
     }
+
+
 
     private Ticket issueTicket(Vehicle vehicle, Slot slot) {
         long ticketNumber = random.nextLong() + 1;

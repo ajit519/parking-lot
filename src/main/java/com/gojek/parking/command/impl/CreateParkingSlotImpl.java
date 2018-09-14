@@ -18,7 +18,7 @@ public class CreateParkingSlotImpl  implements CreateParkingSlot {
             }
             slots = new HashSet<>(capacity);
             addSlots(slots, capacity);
-        System.out.println(String.format("Created a parking lot with %d slots", capacity));
+        System.out.println(String.format(" \n Created a parking lot with %d slots", capacity));
     }
 
     @Override

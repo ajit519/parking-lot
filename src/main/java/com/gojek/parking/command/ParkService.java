@@ -18,5 +18,6 @@ public interface ParkService {
 
     Slot getSlot(String registration);
 
-    List<Integer> getSlots(String color);
+    List<Integer> getSlotsForColour(String color);
+
 }

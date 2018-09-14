@@ -142,7 +142,7 @@ public class ParkingServiceImplTest extends BaseServiceTest {
         parkService.park(REG_3, BLACK);
         parkService.park(REG_4, BLUE);
 
-        List<Integer> slots = parkService.getSlots(WHITE);
+        List<Integer> slots = parkService.getSlotsForColour(WHITE);
 
         assertTrue(slots.contains(SLOT_1));
         assertTrue(slots.contains(SLOT_2));
@@ -151,7 +151,7 @@ public class ParkingServiceImplTest extends BaseServiceTest {
 
     @Test
     public void givenColour_whenNoVehiclePark__thenReturnNoSlot(){
-        List<Integer> slots = parkService.getSlots(WHITE);
+        List<Integer> slots = parkService.getSlotsForColour(WHITE);
 
         assertTrue(slots.isEmpty());
     }
