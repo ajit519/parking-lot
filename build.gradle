@@ -1,9 +1,11 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.gojek'
 version '1.0-SNAPSHOT'
+
 
 sourceCompatibility = 1.8
 

@@ -30,7 +30,8 @@ public class ParkingServiceImpl implements ParkService {
 
         if (freeSlots.size() == 0) {
             System.out.println("Sorry, parking lot is full");
-            throw new RuntimeException("Sorry, parking lot is full");
+            return null;
+           // throw new RuntimeException("Sorry, parking lot is full");
         }
 
         for (Slot slot : usedSlot) {
@@ -107,7 +108,7 @@ public class ParkingServiceImpl implements ParkService {
                 return slot;
             }
         }
-
+        System.out.println("Not Found");
         throw new RuntimeException("Not Found");
     }
 
