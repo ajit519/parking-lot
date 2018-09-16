@@ -6,6 +6,17 @@ plugins {
 group 'com.gojek'
 version '1.0-SNAPSHOT'
 
+mainClassName = 'com.gojek.parking.Main'
+
+jar {
+   baseName = 'parking-lot'
+   version =  '1.0.0'
+    manifest {
+        attributes(
+                'Main-Class': 'com.gojek.parking.Main'
+        )
+    }
+}
 
 sourceCompatibility = 1.8
 
